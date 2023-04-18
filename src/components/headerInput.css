@@ -1,0 +1,37 @@
+.headerContainer {
+    height: 15vh;
+    background-color: rgb(241, 230, 229);
+    display: flex
+}
+
+.headerTitleContainer {
+    width: 50vw;
+    margin:0;
+    padding: 0;
+    position: relative;
+}
+.headerTitle {
+    margin:0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+}
+
+.headerInputContainer{
+    position: relative;
+    width: 50vw;
+    margin: 0;
+    padding:0;
+    background-color: aqua;
+
+}
+.cityInput {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    font-size: 2rem;
+}

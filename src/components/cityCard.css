@@ -1,0 +1,13 @@
+.cityCardContainer {
+    text-align: center;
+    width: 10rem;
+    height: 15rem;
+    background-color: rgb(131, 224, 247);
+    margin: 2rem;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 1px 1px 10px;
+    border-top: 1.5rem solid salmon;
+    /* flex-basis: calc(20% - 10px);  */
+  margin: 5px;
+}
