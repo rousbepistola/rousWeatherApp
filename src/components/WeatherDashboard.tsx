@@ -1,7 +1,9 @@
 import './weatherDashboard.css'
 import CityCard from './CityCard'
+import * as React from 'react'
 
-let weatherData = [  
+
+let weatherDataApi = [  
     {    "city": "Toronto",    "current": 17,    "low": 12,    "high": 22,    "humidity": 62  },  
     {    "city": "Vancouver",    "current": 14,    "low": 9,    "high": 17,    "humidity": 76  },  
     {    "city": "Montreal",    "current": 10,    "low": 5,    "high": 15,    "humidity": 70  },  
@@ -14,14 +16,29 @@ let weatherData = [
     {    "city": "Victoria",    "current": 13,    "low": 8,    "high": 18,    "humidity": 80  }
 ]
 
+type weatherDataType = {
+    "city": string,    
+    "current": number,    
+    "low": number,    
+    "high": number,    
+    "humidity": number
+}
 
-const WeatherDashboard = ({newCity})=>{
+interface WeatherDashboardProps {
+    newCity: string;
+  }
 
-   if(newCity !== ""){
-    weatherData = [...weatherData, {
-        "city": newCity,    "current": 13,    "low": 8,    "high": 18,    "humidity": 80
-    }]
-   }
+const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
+
+    const [weatherData, setWeatherData] = React.useState<weatherDataType[]>(weatherDataApi)
+    
+    React.useEffect(() => {
+        if (newCity) {
+          setWeatherData((prevState) => {
+            return [        ...prevState,        {          city: newCity,          current: 13,          low: 12,          high: 12,          humidity: 50,        },      ];
+          });
+        }
+      }, [newCity]);
 
     return(
         <>

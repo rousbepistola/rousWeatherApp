@@ -1,6 +1,6 @@
 import './App.css';
 import HeaderInput from './components/HeaderInput';
-import WeatherDashboard from './components/WeatherDashboard.jsx'
+import WeatherDashboard from './components/WeatherDashboard'
 import React, { useState } from 'react';
 
 
@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <HeaderInput 
-      onAddCity={(city)=>{
+      onAddCity={(city:string)=>{
           setCityName(city)
       }} 
       cityName={cityName}/>

@@ -1,6 +1,11 @@
 import './cityCard.css'
+import * as React from 'react'
 
-const CityCard = ({city, current, low, high, humidity})=>{
+type CityCardProps = {
+    city:string, current:number, low:number, high:number, humidity:number
+}
+
+const CityCard = ({city, current, low, high, humidity}:CityCardProps)=>{
 
     return(
         <div className="cityCardContainer">

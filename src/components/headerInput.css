@@ -1,7 +1,10 @@
 .headerContainer {
     height: 15vh;
     background-color: rgb(241, 230, 229);
-    display: flex
+    display: flex;
+    /* background-image: url('https://images.pexels.com/photos/268941/pexels-photo-268941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    background-repeat:no-repeat;
+    background-size: cover; */
 }
 
 .headerTitleContainer {
@@ -24,7 +27,7 @@
     width: 50vw;
     margin: 0;
     padding:0;
-    background-color: aqua;
+    /* background-color: aqua; */
 
 }
 .cityInput {

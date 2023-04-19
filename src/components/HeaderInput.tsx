@@ -1,10 +1,15 @@
 import React from 'react';
 import './headerInput.css'
 
-const HeaderInput = ({ onAddCity }) => {
-  const handleSubmit = (e) => {
+interface headerInputProps {
+  cityName: string,
+  onAddCity: (city: string) => void
+}
+
+const HeaderInput = ({cityName, onAddCity }:headerInputProps) => {
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const city = e.target.elements.cityName.value;
+    const city = (e.target as HTMLFormElement).cityName.value;
     onAddCity(city);
     console.log("city added", city);
   };
