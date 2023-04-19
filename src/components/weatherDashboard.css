@@ -7,7 +7,37 @@
     flex-wrap: wrap;
     border-radius: 15px;
     box-shadow: -2px -2px 10px;
-    background-image: url('https://images.pexels.com/photos/989941/pexels-photo-989941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    background-image: url('https://images.pexels.com/photos/763398/pexels-photo-763398.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
     background-size: cover;
     background-repeat: no-repeat;
 }
+.weatherDashboardHomeSectionContainerCity {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #09ae8a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .homeSectionEntries {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    color: #333333;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .homeSectionEntries:hover {
+    background-color: #a0c4ff;
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  }
+  
