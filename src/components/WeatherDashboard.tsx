@@ -3,15 +3,32 @@ import CityCard from './CityCard'
 import * as React from 'react'
 import utils  from '../utils/utilityFunctions'
 
+type weatherDataType = {
+    "city": string|string,    
+    "current": number|string,    
+    "low": number|string,    
+    "high": number|string,    
+    "humidity": number|string,
+    "weather": string,
+    additionalDetails: any | null
+    
+}
+
+interface WeatherDashboardProps {
+    newCity: string;
+}
+
+
+
 function makeUri(homeCity: string, countryCode: string, apiKey: string): string {
     const queryParams = new URLSearchParams({
-      q: homeCity,
+      q: homeCity,    
       countryCode: countryCode,
       apiKey: apiKey,
-    });
+    });    
     console.log(`http://api.openweathermap.org/geo/1.0/direct?${queryParams.toString()}`, "<copy this")
     return `http://api.openweathermap.org/geo/1.0/direct?${queryParams.toString()}`;
-}
+}        
 
 
 
@@ -30,8 +47,8 @@ const callHomeWeather = async(homeCity: string = "ottawa")=>{
         return data
     } catch (error) {
         console.error(error)
-    }
-}
+    }    
+}    
 
 const callWeather = async(lat: number, lon: number)=>{
     const apiKey = 'e9d16de5e53343477b7d21b6572f0aa0';
@@ -43,33 +60,19 @@ const callWeather = async(lat: number, lon: number)=>{
         return data
     } catch (error) {
         console.error(error)
-    }
-}
+    }    
+}    
 
 let weatherDataApi = [  
-    {    "city": "Toronto",    "current": 17,    "low": 12,    "high": 22,    "humidity": 62  },  
-    {    "city": "Vancouver",    "current": 14,    "low": 9,    "high": 17,    "humidity": 76  },  
-    {    "city": "Montreal",    "current": 10,    "low": 5,    "high": 15,    "humidity": 70  },  
-    {    "city": "Calgary",    "current": 8,    "low": 3,    "high": 13,    "humidity": 50  },  
-    {    "city": "Edmonton",    "current": 5,    "low": 0,    "high": 10,    "humidity": 45  },  
-    {    "city": "Ottawa",    "current": 12,    "low": 7,    "high": 18,    "humidity": 68  },  
-    {    "city": "Halifax",    "current": 9,    "low": 4,    "high": 14,    "humidity": 82  },  
-    {    "city": "Quebec City",    "current": 6,    "low": 1,    "high": 11,    "humidity": 60  },  
-    {    "city": "Winnipeg",    "current": 2,    "low": -3,    "high": 8,    "humidity": 40  },  
-    {    "city": "Victoria",    "current": 13,    "low": 8,    "high": 18,    "humidity": 80  }
-]
-
-type weatherDataType = {
-    "city": string,    
-    "current": number,    
-    "low": number,    
-    "high": number,    
-    "humidity": number
-}
-
-interface WeatherDashboardProps {
-    newCity: string;
-  }
+    {    "city": "Toronto",    "current": 280,    "low": 260,    "high": 280,    "humidity": 62, "weather":"Clear", 
+    additionalDetails:{
+        country:"Canada", feels:"300", sunrise:"1681996261", sunset:"1682046680", description:"sunny day :>",
+    }  },  
+    {    "city": "Vancouver",    "current": 280,    "low": 260,    "high": 280,    "humidity": 76, "weather":"Clouds", 
+    additionalDetails:{
+        country:"Canada", feels:"300", sunrise:"1681996261", sunset:"1682046680", description:"sunny day :>",
+    }  },  
+]    
 
 
 
@@ -77,25 +80,11 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
     
 
     const [weatherData, setWeatherData] = React.useState<weatherDataType[]>(weatherDataApi)
-    const [homeWeatherData, setHomeWeatherData] = React.useState<weatherDataType>({city: "ottawa", current: 13, low: 12, high: 12, humidity: 50})
-    
-    React.useEffect(() => {
-        if (newCity) {
-          setWeatherData((prevState) => {
-            return [        
-                ...prevState,        
-                {          
-                    city: newCity,          
-                    current: 13,          
-                    low: 12,          
-                    high: 12,          
-                    humidity: 50,        
-            },      
-        ];
-          });
-        }
-      }, [newCity]);
+    const [homeWeatherData, setHomeWeatherData] = React.useState<weatherDataType>({city: "ottawa", current: 13, low: 12, high: 12, humidity: 50, weather: "Clouds", additionalDetails:{
+        country:"", feels:"", sunrise:"", sunset:"", description:"",
+    } })
 
+      //setting initial state for the home dashboard header
       React.useEffect(()=>{
         async function getWeather(){
             const realWeatherApi = await callHomeWeather()
@@ -107,7 +96,6 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
         async function getWeatherData(){
             const coordinates = await getWeather()
             const weatherData = await callWeather(coordinates.lat, coordinates.lon)
-            console.log(weatherData,"HERE<<<<")
             return weatherData
         }
     
@@ -119,12 +107,59 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
                 "low": weatherData.main.temp_min,    
                 "high": weatherData.main.temp_max,    
                 "humidity": weatherData.main.humidity,
+                "weather": weatherData.weather[0].main,
+                "additionalDetails": null
             }
             setHomeWeatherData(homeWeatherInformation)
         }
     
         getHomeWeatherData()
     },[])
+
+    //setting the home dashboard cards state
+    React.useEffect(()=>{
+        async function getWeather(){
+            const realWeatherApi = await callHomeWeather(newCity)
+            return {
+                lat:realWeatherApi[0].lat,
+                lon:realWeatherApi[0].lon
+            }
+        }
+        async function getWeatherData(){
+            const coordinates = await getWeather()
+            const weatherData = await callWeather(coordinates.lat, coordinates.lon)
+            return weatherData
+        }
+    
+        const getHomeWeatherData = async () => {
+            const weatherData = await getWeatherData()
+            console.log(weatherData,"<<<<HERE")
+            const weatherInformation = {
+                "city": newCity,    
+                "current": weatherData.main.temp,    
+                "low": weatherData.main.temp_min,    
+                "high": weatherData.main.temp_max,    
+                "humidity": weatherData.main.humidity,
+                "weather": weatherData.weather[0].main, 
+                "additionalDetails": {
+                    country: weatherData.sys.country,
+                    feels:weatherData.main.feels_like,
+                    sunrise:weatherData.sys.sunrise,
+                    sunset:weatherData.sys.sunset,
+                    description:weatherData.weather[0].description
+                }
+            }
+            setWeatherData((prevState) => {
+                return [        
+                    ...prevState,        
+                    weatherInformation,      
+                ];
+              
+            })
+        }
+    
+        getHomeWeatherData()
+    },[newCity])
     
 
     return(
@@ -138,9 +173,18 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
             </div>
             <div className="weatherDashboardContainer">
                 {weatherData.map((data)=>{
-                    const {city, current, low, high, humidity} = data
+                    const {city, current, low, high, humidity, weather} = data
+                    const {country, feels, sunrise, sunset, description} = data.additionalDetails
                     return(
-                        <CityCard city = {city} current={current} low={low} high={high} humidity={humidity}/>
+                        <CityCard 
+                        city = {city} 
+                        current={utils.kelvinToCelsius(current)} 
+                        low={utils.kelvinToCelsius(low)} 
+                        high={utils.kelvinToCelsius(high)} 
+                        humidity={humidity} weather={weather} 
+                        key={city}
+                        additionalDetails={{country, feels, sunrise, sunset, description}}
+                        />
                     )
                 })}
             </div>

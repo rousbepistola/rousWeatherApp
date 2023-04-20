@@ -11,6 +11,7 @@
   transition: all 0.3s ease-in-out;
   width: 300px;
   z-index: 1;
+  border-top: 2rem solid salmon;
 }
 
 .cityCardContainer:hover {
@@ -46,14 +47,69 @@
 
 .cityCardContainer h3 {
   font-size: 28px;
-  margin-bottom: 20px;
+  margin: 20px 0;
+  border-bottom:0.2rem solid rgb(12, 112, 149);
 }
 
 .cityCardContainer p {
   font-size: 20px;
   margin-bottom: 10px;
+  text-align: left;
+  background-color:rgba(103, 197, 232, 0.712);
+  border-radius: 1rem;
 }
 
 .cityCardContainer p:last-child {
   margin-bottom: 0;
 }
+
+.cityCardContainer>p>span{
+  display: inline-block;
+  width: 5rem;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  background-color: #14e069a8;
+  color: #212923;
+  font-size: 0.8rem;
+  border-left: 0.5rem solid rgb(12, 112, 149);
+  border-right: 0.5rem solid rgb(12, 112, 149);
+  border-top: 0.1rem solid rgb(12, 112, 149);
+  border-bottom: 0.1rem solid rgb(12, 112, 149);
+}
+.detailsCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  max-width: 500px;
+  width: 100%;
+  height: 100%;
+}
+
+.detailsCard p {
+text-align: left;
+}
+
+.detailsCard p span {
+  display: inline-block;
+  width: 5rem;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  background-color: #14e069a8;
+  color: #212923;
+  font-size: 0.8rem;
+  border-left: 0.5rem solid rgb(12, 112, 149);
+  border-right: 0.5rem solid rgb(12, 112, 149);
+  border-top: 0.1rem solid rgb(12, 112, 149);
+  border-bottom: 0.1rem solid rgb(12, 112, 149);
+}
+
+
