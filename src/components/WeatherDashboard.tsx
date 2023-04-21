@@ -2,6 +2,8 @@ import './weatherDashboard.css'
 import CityCard from './CityCard'
 import * as React from 'react'
 import utils  from '../utils/utilityFunctions'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { changeHome } from '../redux/weatherSlice'
 
 type weatherDataType = {
     "city": string|string,    
@@ -17,6 +19,24 @@ type weatherDataType = {
 interface WeatherDashboardProps {
     newCity: string;
 }
+
+// Define the initial state using that type
+const initialState: weatherDataType = {    
+    "city": "Ottawa",    
+    "current": 280,    
+    "low": 260,    
+    "high": 280,    
+    "humidity": 62, 
+    "weather":"Clear", 
+    additionalDetails:{
+        country:"Canada", 
+        feels:"300", 
+        sunrise:"1681996261", 
+        sunset:"1682046680", 
+        description:"sunny day :>",
+    }  
+}
+
 
 
 
@@ -36,7 +56,7 @@ function makeUri(homeCity: string, countryCode: string, apiKey: string): string 
 
 const callHomeWeather = async(homeCity: string = "ottawa")=>{
     const countryCode = 'ca';
-    const apiKey = 'e9d16de5e53343477b7d21b6572f0aa0';
+    const apiKey: string  = process.env.REACT_APP_API_KEY!;
     
 
     const uri = makeUri(homeCity, countryCode, apiKey);
@@ -51,7 +71,7 @@ const callHomeWeather = async(homeCity: string = "ottawa")=>{
 }    
 
 const callWeather = async(lat: number, lon: number)=>{
-    const apiKey = 'e9d16de5e53343477b7d21b6572f0aa0';
+    const apiKey = process.env.REACT_APP_API_KEY!;
     const uri = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
     try {
         const rawData = await fetch(uri)
@@ -77,12 +97,13 @@ let weatherDataApi = [
 
 
 const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
-    
+    const dispatch = useAppDispatch()
+    const homeWeatherData = useAppSelector((state) => state.weather);
 
     const [weatherData, setWeatherData] = React.useState<weatherDataType[]>(weatherDataApi)
-    const [homeWeatherData, setHomeWeatherData] = React.useState<weatherDataType>({city: "ottawa", current: 13, low: 12, high: 12, humidity: 50, weather: "Clouds", additionalDetails:{
-        country:"", feels:"", sunrise:"", sunset:"", description:"",
-    } })
+    // const [homeWeatherData, setHomeWeatherData] = React.useState<weatherDataType>({city: "ottawa", current: 13, low: 12, high: 12, humidity: 50, weather: "Clouds", additionalDetails:{
+    //     country:"", feels:"", sunrise:"", sunset:"", description:"",
+    // } })
 
       //setting initial state for the home dashboard header
       React.useEffect(()=>{
@@ -110,7 +131,7 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
                 "weather": weatherData.weather[0].main,
                 "additionalDetails": null
             }
-            setHomeWeatherData(homeWeatherInformation)
+            dispatch(changeHome(homeWeatherInformation))
         }
     
         getHomeWeatherData()
@@ -133,7 +154,6 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
     
         const getHomeWeatherData = async () => {
             const weatherData = await getWeatherData()
-            console.log(weatherData,"<<<<HERE")
             const weatherInformation = {
                 "city": newCity,    
                 "current": weatherData.main.temp,    
