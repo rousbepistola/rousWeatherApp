@@ -9,10 +9,11 @@ type CityCardProps = {
     high: number | string,
     humidity: number | string,
     weather: string,
-    additionalDetails:any
+    additionalDetails:any,
+    unitOfMeasure: string
 }
 
-const CityCard = ({ city, current, low, high, humidity, weather, additionalDetails }: CityCardProps) => {
+const CityCard = ({ city, current, low, high, humidity, weather, additionalDetails, unitOfMeasure }: CityCardProps) => {
     const [showDetails, setShowDetails] = React.useState(false);
 
     const toggleDetails = () => {
@@ -23,7 +24,7 @@ const CityCard = ({ city, current, low, high, humidity, weather, additionalDetai
     return (
         <div className="cityCardContainer" onClick={toggleDetails}>
             <h3>{city.toUpperCase()}</h3>
-            <p><span>Current</span> {current} Deg C</p>
+            <p><span>Current</span> {current}°</p>
             <p><span>Low</span> {low}</p>
             <p><span>High</span> {high}</p>
             <p><span>Humidity</span> {humidity}%</p>
@@ -39,8 +40,9 @@ const CityCard = ({ city, current, low, high, humidity, weather, additionalDetai
                 {weather === "Clear" && <img src="https://ssl.gstatic.com/onebox/weather/128/sunny.png" alt="" />}
                 {weather === "Rain" && <img src="https://ssl.gstatic.com/onebox/weather/128/rain.png " alt="" />}
                 {weather === "Clouds" && <img src="https://ssl.gstatic.com/onebox/weather/128/cloudy.png" alt="" />}
+                <h3>Additional Details</h3>
                 <p><span>Country </span> {additionalDetails.country}</p>
-                <p><span>Feels Like </span> {utils.kelvinToCelsius(additionalDetails.feels)}</p>
+                <p><span>Feels Like </span> {unitOfMeasure === "C" ? utils.kelvinToCelsius(additionalDetails.feels) : utils.kelvinToFahrenheit(additionalDetails.feels)}</p>
                 <p><span>Sunrise </span> {utils.epochToLocalTime(additionalDetails.sunrise, additionalDetails.country)}</p>
                 <p><span>Sunset </span> {utils.epochToLocalTime(additionalDetails.sunset, additionalDetails.country)}</p>
                 <p><span>Description </span> {additionalDetails.description}</p>

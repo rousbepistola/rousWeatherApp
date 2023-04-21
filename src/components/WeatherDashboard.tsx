@@ -5,6 +5,8 @@ import utils  from '../utils/utilityFunctions'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { changeHome } from '../redux/weatherSlice'
 
+const {callHomeWeather, callWeather, kelvinToFahrenheit, kelvinToCelsius } = utils
+
 type weatherDataType = {
     "city": string|string,    
     "current": number|string,    
@@ -20,68 +22,7 @@ interface WeatherDashboardProps {
     newCity: string;
 }
 
-// Define the initial state using that type
-const initialState: weatherDataType = {    
-    "city": "Ottawa",    
-    "current": 280,    
-    "low": 260,    
-    "high": 280,    
-    "humidity": 62, 
-    "weather":"Clear", 
-    additionalDetails:{
-        country:"Canada", 
-        feels:"300", 
-        sunrise:"1681996261", 
-        sunset:"1682046680", 
-        description:"sunny day :>",
-    }  
-}
 
-
-
-
-function makeUri(homeCity: string, countryCode: string, apiKey: string): string {
-    const queryParams = new URLSearchParams({
-      q: homeCity,    
-      countryCode: countryCode,
-      apiKey: apiKey,
-    });    
-    console.log(`http://api.openweathermap.org/geo/1.0/direct?${queryParams.toString()}`, "<copy this")
-    return `http://api.openweathermap.org/geo/1.0/direct?${queryParams.toString()}`;
-}        
-
-
-
-  
-
-const callHomeWeather = async(homeCity: string = "ottawa")=>{
-    const countryCode = 'ca';
-    const apiKey: string  = process.env.REACT_APP_API_KEY!;
-    
-
-    const uri = makeUri(homeCity, countryCode, apiKey);
-    try {
-        const rawData = await fetch(uri)
-        const data = await rawData.json()
-        console.log(data)
-        return data
-    } catch (error) {
-        console.error(error)
-    }    
-}    
-
-const callWeather = async(lat: number, lon: number)=>{
-    const apiKey = process.env.REACT_APP_API_KEY!;
-    const uri = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-    try {
-        const rawData = await fetch(uri)
-        const data = await rawData.json()
-        console.log(data)
-        return data
-    } catch (error) {
-        console.error(error)
-    }    
-}    
 
 let weatherDataApi = [  
     {    "city": "Toronto",    "current": 280,    "low": 260,    "high": 280,    "humidity": 62, "weather":"Clear", 
@@ -101,10 +42,9 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
     const homeWeatherData = useAppSelector((state) => state.weather);
 
     const [weatherData, setWeatherData] = React.useState<weatherDataType[]>(weatherDataApi)
-    // const [homeWeatherData, setHomeWeatherData] = React.useState<weatherDataType>({city: "ottawa", current: 13, low: 12, high: 12, humidity: 50, weather: "Clouds", additionalDetails:{
-    //     country:"", feels:"", sunrise:"", sunset:"", description:"",
-    // } })
+    const [tempUnit, setTempUnit] = React.useState<string>("C")
 
+    //setting the home dashboard cards state
       //setting initial state for the home dashboard header
       React.useEffect(()=>{
         async function getWeather(){
@@ -186,10 +126,19 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
         <>
             <div className='weatherDashboardHomeSectionContainerCity'>
                 <p className="homeSectionEntries">Home City: {homeWeatherData.city}</p>
-                <p className="homeSectionEntries">Current: {utils.kelvinToCelsius(homeWeatherData.current)}°</p>
-                <p className="homeSectionEntries">Low: {utils.kelvinToCelsius(homeWeatherData.low)}°</p>
-                <p className="homeSectionEntries">High: {utils.kelvinToCelsius(homeWeatherData.high)}°</p>
+                <p className="homeSectionEntries">Current: {tempUnit === "C" ? kelvinToCelsius(homeWeatherData.current) : kelvinToFahrenheit(homeWeatherData.current)}°</p>
+                <p className="homeSectionEntries">Low: {tempUnit === "C" ? kelvinToCelsius(homeWeatherData.low) : kelvinToFahrenheit(homeWeatherData.low)}°</p>
+                <p className="homeSectionEntries">High: {tempUnit === "C" ? kelvinToCelsius(homeWeatherData.high) :kelvinToFahrenheit(homeWeatherData.high)}°</p>
                 <p className="homeSectionEntries">Humidity: {homeWeatherData.humidity}%</p>
+                <button onClick = {()=>{
+                    if(tempUnit === "C"){
+                        setTempUnit("F")
+                    }
+                    if(tempUnit === "F"){
+                        setTempUnit("C")
+                    }
+                }}
+                >Unit of Measure: {tempUnit}°</button>
             </div>
             <div className="weatherDashboardContainer">
                 {weatherData.map((data)=>{
@@ -198,12 +147,13 @@ const WeatherDashboard = ({newCity}:WeatherDashboardProps)=>{
                     return(
                         <CityCard 
                         city = {city} 
-                        current={utils.kelvinToCelsius(current)} 
-                        low={utils.kelvinToCelsius(low)} 
-                        high={utils.kelvinToCelsius(high)} 
+                        current={tempUnit === "C" ? kelvinToCelsius(current) : kelvinToFahrenheit(current)} 
+                        low={tempUnit === "C" ? kelvinToCelsius(low) :kelvinToFahrenheit(low)} 
+                        high={tempUnit === "C" ? kelvinToCelsius(high) :kelvinToFahrenheit(high)} 
                         humidity={humidity} weather={weather} 
                         key={city}
                         additionalDetails={{country, feels, sunrise, sunset, description}}
+                        unitOfMeasure={tempUnit}
                         />
                     )
                 })}

@@ -23,7 +23,7 @@ const HeaderInput = ({cityName, onAddCity }:headerInputProps) => {
       <div className="headerInputContainer">
         <form onSubmit={handleSubmit}>
           <label>
-            <input className="cityInput" pattern="[A-Za-z]+" placeholder="Enter a city name" type="text" name="cityName" />
+          <input className="cityInput" pattern="[A-Za-z ]+" placeholder="Enter a city name" type="text" name="cityName" />
           </label>
           <button type="submit">Add City</button>
         </form>
